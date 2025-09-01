@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator Hub - Free Online Calculators</title>
+  <meta name="description" content="Free online calculators for BMI, mortgage, percentage, age, and more. Easy to use and mobile-friendly.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; color: #222; }
+    header { background: #004080; color: white; padding: 1rem; text-align: center; }
+    header h1 { margin: 0; font-size: 1.8rem; }
+    .layout { display: flex; min-height: 100vh; }
+    aside { width: 220px; background: #f1f1f1; padding: 1rem; border-right: 1px solid #ddd; }
+    aside h3 { margin-top: 1rem; font-size: 0.9rem; text-transform: uppercase; color: #444; }
+    aside a { display: block; margin: 0.4rem 0; color: #004080; text-decoration: none; }
+    aside a:hover { text-decoration: underline; }
+    main { flex: 1; padding: 1.5rem; }
+    .card { background: white; padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    h2 { color: #004080; margin-top: 0; }
+    label { display: block; margin: 0.5rem 0; font-size: 0.9rem; }
+    input { width: 100%; padding: 0.5rem; margin-top: 0.2rem; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 0.5rem 1rem; background: #004080; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #003060; }
+    .result { font-weight: bold; margin-top: 0.6rem; color: #222; }
+    footer { text-align: center; padding: 1rem; background: #f1f1f1; font-size: 0.85rem; color: #666; border-top: 1px solid #ddd; }
+    @media(max-width: 768px){ .layout { flex-direction: column; } aside{ width:100%; border-right: none; border-bottom: 1px solid #ddd; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Calculator Hub</h1>
+    <p>Free Online Calculators for Everyday Use</p>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <h3>Health</h3>
+      <a href="#bmi">BMI Calculator</a>
+
+      <h3>Math</h3>
+      <a href="#percentage">Percentage Calculator</a>
+
+      <h3>Finance</h3>
+      <a href="#mortgage">Mortgage Calculator</a>
+
+      <h3>Date & Time</h3>
+      <a href="#age">Age Calculator</a>
+    </aside>
+
+    <main>
+      <div class="card" id="bmi">
+        <h2>BMI Calculator</h2>
+        <p>Calculate your Body Mass Index (BMI) and find out if you are underweight, normal, overweight, or obese.</p>
+        <label>Weight (kg): <input type="number" id="bmi-weight" value="70"></label>
+        <label>Height (cm): <input type="number" id="bmi-height" value="175"></label>
+        <button onclick="calcBMI()">Calculate</button>
+        <div class="result" id="bmi-result"></div>
+      </div>
+
+      <div class="card" id="percentage">
+        <h2>Percentage Calculator</h2>
+        <p>Solve common percentage problems like A% of B.</p>
+        <label>A (%): <input type="number" id="perc-a" value="20"></label>
+        <label>B (number): <input type="number" id="perc-b" value="200"></label>
+        <button onclick="calcPercentage()">Calculate</button>
+        <div class="result" id="perc-result"></div>
+      </div>
+
+      <div class="card" id="mortgage">
+        <h2>Mortgage Calculator</h2>
+        <p>Estimate monthly mortgage payments based on loan amount, interest rate, and term.</p>
+        <label>Loan Amount ($): <input type="number" id="mort-principal" value="300000"></label>
+        <label>Annual Interest Rate (%): <input type="number" id="mort-rate" value="7.5"></label>
+        <label>Term (years): <input type="number" id="mort-years" value="30"></label>
+        <button onclick="calcMortgage()">Calculate</button>
+        <div class="result" id="mort-result"></div>
+      </div>
+
+      <div class="card" id="age">
+        <h2>Age Calculator</h2>
+        <p>Find your age in years, months, and days from your date of birth.</p>
+        <label>Date of Birth: <input type="date" id="dob" value="1995-01-01"></label>
+        <button onclick="calcAge()">Calculate</button>
+        <div class="result" id="age-result"></div>
+      </div>
+    </main>
+  </div>
+
+  <footer>
+    © <span id="year"></span> Calculator Hub. Built for educational purposes.  
+  </footer>
+
+  <script>
+    document.getElementById("year").innerText = new Date().getFullYear();
+
+    function calcBMI(){
+      const w = parseFloat(document.getElementById("bmi-weight").value);
+      const h = parseFloat(document.getElementById("bmi-height").value)/100;
+      if(w>0 && h>0){
+        const bmi = (w / (h*h)).toFixed(2);
+        let status = "";
+        if(bmi<18.5) status="Underweight";
+        else if(bmi<25) status="Normal";
+        else if(bmi<30) status="Overweight";
+        else status="Obese";
+        document.getElementById("bmi-result").innerText = `BMI: ${bmi} (${status})`;
+      }
+    }
+
+    function calcPercentage(){
+      const a = parseFloat(document.getElementById("perc-a").value);
+      const b = parseFloat(document.getElementById("perc-b").value);
+      if(!isNaN(a) && !isNaN(b)){
+        document.getElementById("perc-result").innerText = `${a}% of ${b} = ${(a/100*b).toFixed(2)}`;
+      }
+    }
+
+    function calcMortgage(){
+      const P = parseFloat(document.getElementById("mort-principal").value);
+      const rate = parseFloat(document.getElementById("mort-rate").value)/100/12;
+      const n = parseFloat(document.getElementById("mort-years").value)*12;
+      if(P>0 && rate>0 && n>0){
+        const pow = Math.pow(1+rate,n);
+        const m = (P*rate*pow)/(pow-1);
+        document.getElementById("mort-result").innerText = `Monthly Payment: $${m.toFixed(2)}`;
+      }
+    }
+
+    function calcAge(){
+      const dob = new Date(document.getElementById("dob").value);
+      const now = new Date();
+      if(!isNaN(dob.getTime())){
+        let y = now.getFullYear()-dob.getFullYear();
+        let m = now.getMonth()-dob.getMonth();
+        let d = now.getDate()-dob.getDate();
+        if(d<0){ m--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+        if(m<0){ y--; m+=12; }
+        document.getElementById("age-result").innerText = `${y} years, ${m} months, ${d} days`;
+      }
+    }
+  </script>
+</body>
+</html>
